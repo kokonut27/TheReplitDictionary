@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Edit "{{ word['word'] }}" - The Replit Dictionary - Replit's Own Urban Dictionary!</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta content="Edit '{{ word['word'] }}' - The Replit Dictionary - Replit's Own Urban Dictionary!" property="og:title" />
+    <meta content="The Replit Dictionary | A unique and aesthetic urban dictionary, just for Replit!" property="og:description" />
+    <meta content="https://TheReplitDictionary.jbloves27.repl.co" property="og:url" />
+		<meta property="og:type" content="website" />
+    <meta content= "{{ url_for('static', filename='favicon.png') }}" property="og:image" />
+    <meta id="embed-color" content="#77AD78" data-react-helmet="true" name="theme-color" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
+  </head>
+  <body>
+    <nav>
+      <div class="navbar">
+        <a href="/">
+          <img src="{{ url_for('static', filename='favicon.png') }}" width="50" height="50">
+        </a>
+        <header>
+          <ul class="navbar-items">
+            {% if user_id %}
+              <li><a href="{{ url_for('author', name=username) }}">Profile</a></li>
+              <li><a href="{{ url_for('create') }}">Create</a></li>
+            {% else %}
+              <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+          </ul>
+        </header>
+      </div>
+    </nav>
+    
+    <center>
+      {% for message in get_flashed_messages() %}
+        <div>{{ message }}</div>
+      {% endfor %}
+      <div style="padding: 16px;">
+        <h1>Editing "{{ word['word'] }}"</h1>
+        <form method="POST">
+          <input type="text" name="word" placeholder="Word name..." value="{{ request.form['word'] or word['word'] }}">
+          <br></br>
+          <input type="text" name="definition" placeholder="Word definition..." value="{{ request.form['definition'] or word['content'] }}">
+          <br></br>
+          <button style="width: 200px; padding: 5px;">Edit now!</button>
+        </form>
+        <br>
+        <form action="{{ url_for('index') }}" method="GET">
+          <button style="width: 200px; padding: 5px; background: #FEDC56">Cancel</button>
+        </form>
+        <br>
+        <form action="{{ url_for('delete', id=word['id']) }}" method="POST">
+          <button style="width: 200px; padding: 5px; background: #420D09" onclick="return confirm('Are you sure you want to delete this post?')">Delete Word</button>
+        </form>
+      </div>
+    </center>
+  </body>
+</html>

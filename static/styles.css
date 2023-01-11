@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+:root {
+  --background: #504B43;
+  --underline: #b2bfb2;
+  --primary-1: #77AD78;
+  --primary-2: #7DBA84;
+  --primary-3: #8FD694;
+  --primary-4: #6F8F72;
+
+  --transition-speed: 0.3s;
+}
+
+* {
+  transition: background var(--transition-speed), color var(--transition-speed);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background: var(--background);
+  color: var(--primary-1);
+  padding: 0;
+}
+
+.navbar {
+  background: var(--primary-4);
+  color: var(--background);
+  display: flex;
+  padding: 10px;
+}
+
+.navbar img {
+  vertical-align: middle;
+}
+
+.navbar img:hover {
+  animation: popout 0.3s linear 1;
+}
+
+@keyframes popout {
+  50% {transform: scale(1.1);}
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.navbar-items li {
+  display: inline-block;
+  padding: 0 20px;
+  opacity: 0.75;
+  transition: 0.35s;
+}
+
+.navbar-items li:hover {
+  opacity: 1;
+  transform: translate(15px, 0px);
+}
+
+h1 {
+  padding-bottom: 10px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid var(--underline);
+}
+
+.homepage {
+  display: flex;
+  padding: 15px;
+  margin: auto;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.word {
+  padding: 5px;
+  border-radius: 5px;
+  background: var(--primary-4);
+  border: none;
+  opacity: 1;
+  transition: 0.5s;
+  width: 13.5em;
+}
+
+.word:hover {
+  opacity: 0.9;
+  transform: scale(1.1);
+}
+
+button {
+  background: var(--primary-3);
+  color: var(--primary-4);
+  transition: 0.5s;
+  opacity: 0.8;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  opacity: 1;
+  cursor: pointer;
+  transform: skewY(-7.5deg);
+}
+
+input {
+  background: var(--primary-3);
+  color: var(--primary-4);
+  border: var(--underline;);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.word-title {
+  display: inline-block;
+  transition: 0.5s;
+  position: relative;
+}
+
+.word-title:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.word-title:hover {
+  padding-right: 24px;
+  padding-left: 6px;
+}
+
+.word-title:hover:after {
+  opacity: 1;
+  right: 6px;
+}
+
+.badges {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.badge-centered {
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  padding: 3px;
+  border-radius: 5px;
+  background: var(--primary-2);
+  color: var(--background);
+  border: none;
+  font-size: 12px;
+}
+
+.badge-primary {
+  background: var(--primary-1);
+}

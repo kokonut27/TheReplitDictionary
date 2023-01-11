@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>The Replit Dictionary - Replit's Own Urban Dictionary!</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta content="The Replit Dictionary - Replit's Own Urban Dictionary!" property="og:title" />
+    <meta content="The Replit Dictionary | A unique and aesthetic urban dictionary, just for Replit!" property="og:description" />
+    <meta content="https://TheReplitDictionary.jbloves27.repl.co" property="og:url" />
+		<meta property="og:type" content="website" />
+    <meta content= "{{ url_for('static', filename='favicon.png') }}" property="og:image" />
+    <meta id="embed-color" content="#77AD78" data-react-helmet="true" name="theme-color" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
+  </head>
+  <body> <!-- change layout into more boxed - more columns more rows. NOT single layered over and over. -->
+    <nav>
+      <div class="navbar">
+        <a href="/">
+          <img src="{{ url_for('static', filename='favicon.png') }}" width="50" height="50">
+        </a>
+        <header>
+          <ul class="navbar-items">
+            {% if user_id %}
+              <li><a href="{{ url_for('author', name=username) }}">Profile</a></li>
+            <li><a href="{{ url_for('create') }}">Create</a></li>
+            {% else %}
+              <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+          </ul>
+        </header>
+      </div>
+    </nav>
+    
+    <div class="homepage words">
+      {% for message in get_flashed_messages() %}
+        <div>{{ message }}</div>
+      {% endfor %}
+      {% for word in words %}
+        <div class="word">
+          <h2 style="padding-bottom: 10px;">
+            <a class="word-title link" href="{{ url_for('word', word_id=word['id']) }}">
+              {{ word['word'] }}
+            </a>
+          </h2>
+          <div class="badges">
+            <span class="badge badge-primary">{{ word['created'] }}</span>
+            <span class="badge badge-secondary">
+              <a href="{{ url_for('author', name=word['author']) }}">
+                {{ word['author'] }}
+              </a>
+            </span>
+            <span class="badge badge-tertiary">
+              <a href="{{ url_for('edit', id=word['id']) }}">
+                Edit
+              </a>
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

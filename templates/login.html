@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Login - The Replit Dictionary - Replit's Own Urban Dictionary!</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta content="Login - The Replit Dictionary - Replit's Own Urban Dictionary!" property="og:title" />
+    <meta content="The Replit Dictionary | A unique and aesthetic urban dictionary, just for Replit!" property="og:description" />
+    <meta content="https://TheReplitDictionary.jbloves27.repl.co" property="og:url" />
+		<meta property="og:type" content="website" />
+    <meta content= "{{ url_for('static', filename='favicon.png') }}" property="og:image" />
+    <meta id="embed-color" content="#77AD78" data-react-helmet="true" name="theme-color" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
+  </head>
+  <body>
+    <nav>
+      <div class="navbar">
+        <a href="/">
+          <img src="{{ url_for('static', filename='favicon.png') }}" width="50" height="50">
+        </a>
+        <header>
+          <ul class="navbar-items">
+            {% if user_id %}
+              <li><a href="{{ url_for('author', name=username) }}">Profile</a></li>
+              <li><a href="{{ url_for('create') }}">Create</a></li>
+            {% else %}
+              <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+          </ul>
+        </header>
+      </div>
+    </nav>
+    
+    <center>
+      <div class="homepage centered">
+        <div>
+          <h1>Login with Replit</h1>
+          <!-- <form method="post"> -->
+            <button id="replit" style="width: 200px;">
+      			  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Repl.it_logo.svg" height="40px;" style="float:left; margin-right: 17px; padding-top: 0px !important;">
+      			  <div style="padding-top: 12px; text-align: left;">
+      			    Login With Replit
+      			  </div>
+      			  <script authed="location.reload()">
+        				;(function() {
+          var selem = document.currentScript;
+        
+          var button = document.getElementById("replit")
+        
+          if (location.protocol !== 'https:') {
+            var err = document.createElement('div');
+            err.className = "replit-auth-error";
+            err.textContent = 'Replit auth requires https!';
+            selem.parentNode.insertBefore(err, selem);
+          }
+        
+          button.onclick = function() {
+            window.addEventListener('message', authComplete);
+        
+            var h = 500;
+        		var w = 400;
+        		var left = (screen.width / 2) - ( w / 2);
+        		var top = (screen.height / 2) - (h / 2);
+        
+            var authWindow = window.open(
+              'https://replit.com/auth_with_repl_site?domain='+location.host,
+              '_blank',
+              'modal =yes, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left)
+        
+            function authComplete(e) {
+              if (e.data !== 'auth_complete') {
+                return;
+              }
+        
+              window.removeEventListener('message', authComplete);
+        
+              authWindow.close();
+              if (selem.attributes.authed.value) {
+                eval(selem.attributes.authed.value);
+              } else {
+                location.reload();
+              }
+            }
+          }
+        
+          selem.parentNode.insertBefore(button, selem);
+        })();
+        			</script>
+      		  </button>
+          <!-- </form> -->
+        </div>
+      </div>
+    </center>
+  </body>
+</html>
