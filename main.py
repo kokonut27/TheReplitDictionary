@@ -22,11 +22,22 @@ def get_word(word_id):
         abort(404)
     return word
 
+def get_author(name):
+    conn = get_db_connection()
+    author = conn.execute('SELECT * FROM authors WHERE name = ?',
+                         (name, )).fetchone()
+    conn.close()
+    if author == None:
+        abort(404)
+    return author
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ["secret"]
+admin = ["JBloves27"]
 # db["number_of_posts"] = 3
 # print(db.keys())
+# db["number_of_users"] = 1
 
 @app.route('/')
 def index():
@@ -43,19 +54,37 @@ def index():
 @app.route('/login')
 def login():
   user_id = request.headers["X-Replit-User-Id"]
+  username = request.headers["X-Replit-User-Name"]
   if user_id:
+    conn = get_db_connection()
+    conn.execute("INSERT INTO authors (name, words_created) VALUES (?, ?)",
+                         (username,0))
+    conn.commit()
+    conn.close()
+    db["number_of_users"] += 1
     return redirect(url_for('index'))
   else:
     return render_template(
       "login.html",
       user_id = user_id,
-      username = request.headers["X-Replit-User-Name"]
+      username = username
     )
 
 @app.route('/author/<name>')
 def author(name):
-  # make a separate database for this - separate sql table, separate db, and new functions to match it.
-  pass
+  the_author = get_author(name)
+  if name in admin:
+    is_admin = True;
+  else: 
+    is_admin = False;
+  return render_template(
+    "author.html",
+    user_id = request.headers["X-Replit-User-Id"],
+    username = name,
+    words_created = the_author["words_created"],
+    author = the_author,
+    is_admin = is_admin
+  )
 
 @app.route('/word/<int:word_id>')
 def word(word_id):
@@ -69,6 +98,7 @@ def word(word_id):
   return render_template(
     "word.html",
     user_id = request.headers["X-Replit-User-Id"],
+    username = request.headers["X-Replit-User-Name"],
     word = word,
     content = the_word["content"],
     author = the_word["author"],
@@ -97,9 +127,15 @@ def edit(id):
       )
       conn.commit()
       conn.close()
+      try:
+        return redirect(url_for('word', word_id = id))
+      except:
+        return redirect(url_for('index'))
   return render_template(
     "edit.html",
-    word = the_word
+    word = the_word,
+    user_id = request.headers["X-Replit-User-Id"],
+    username = request.headers["X-Replit-User-Name"]
   )
 
 @app.route('/create', methods = ["GET", "POST"])
@@ -127,10 +163,23 @@ def create():
       conn.commit()
       conn.close()
       db["number_of_posts"] += 1
+      
+      the_author = get_author(author)
+      words_created = the_author["words_created"]
+      words_created+=1
+      number_of_users = db["number_of_users"]
+      conn = get_db_connection()
+      conn.execute(
+        'UPDATE authors SET words_created = ?'
+        ' WHERE id = ?', (words_created, number_of_users)
+      )
+      conn.commit()
+      conn.close()
       return redirect(url_for('word', word_id = db["number_of_posts"]))
   return render_template(
     "create.html",
-    user_id = request.headers["X-Replit-User-Id"]
+    user_id = request.headers["X-Replit-User-Id"],
+    username = request.headers["X-Replit-User-Name"]
   )
 
 @app.route('/delete/<int:id>')
@@ -142,12 +191,14 @@ def delete(id):
   conn.close()
   flash('"{}" was successfully deleted!'.format(word['word']))
   return redirect(url_for('index'))
+  
 @app.errorhandler(404)
 def not_found(e):
   return render_template(
     "404.html",
     error=e,
-    user_id = request.headers["X-Replit-User-Id"]
+    user_id = request.headers["X-Replit-User-Id"],
+    username = request.headers["X-Replit-User-Name"]
   )
 
 if __name__ == "__main__":

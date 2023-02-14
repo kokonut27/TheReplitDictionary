@@ -7,3 +7,11 @@ CREATE TABLE defs (
     word TEXT NOT NULL,
     content TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS authors;
+
+CREATE TABLE authors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    words_created INTEGER NOT NULL
+);
