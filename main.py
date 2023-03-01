@@ -91,8 +91,9 @@ def word(word_id):
   the_word = get_word(word_id)
   if len(the_word["word"]) > 10:
     word = the_word["word"]
-    word = word[:11]
-    word += "..."
+    word = word[:25]
+    if len(word) >= 26:
+      word += "..."
   else:
     word = the_word["word"]
   return render_template(
@@ -144,6 +145,9 @@ def create():
     word = request.form["word"]
     definition = request.form["definition"]
     author = request.headers["X-Replit-User-Name"]
+    conn = get_db_connection()
+    words = conn.execute('SELECT * FROM defs').fetchall()
+    conn.close()
     
     blacklist = open("blacklist.txt")
     blacklist = blacklist.read().lower().splitlines()
@@ -156,25 +160,31 @@ def create():
       flash("Word name is required!")
     elif not definition:
       flash("Definition is required!")
+    elif word in words:
+      flash("Word already exists, try commenting on the word that exists already!")
     else:
+      # print('afawebfilawebf')
       conn = get_db_connection()
       conn.execute("INSERT INTO defs (word, content, author) VALUES (?, ?, ?)",
                          (word,definition,author))
       conn.commit()
       conn.close()
       db["number_of_posts"] += 1
+      # print("awjfnawileubgiwagwaefawef 2")
       
       the_author = get_author(author)
       words_created = the_author["words_created"]
       words_created+=1
-      number_of_users = db["number_of_users"]
+      author_number = the_author["id"]
+      print(words_created, author_number)
       conn = get_db_connection()
       conn.execute(
         'UPDATE authors SET words_created = ?'
-        ' WHERE id = ?', (words_created, number_of_users)
+        ' WHERE id = ?', (words_created, author_number)
       )
       conn.commit()
       conn.close()
+      
       return redirect(url_for('word', word_id = db["number_of_posts"]))
   return render_template(
     "create.html",
@@ -186,9 +196,12 @@ def create():
 def delete(id):
   word = get_word(id)
   conn = get_db_connection()
+  print("hello")
   conn.execute("DELETE from defs where id = ?", (id, ))
   conn.commit()
   conn.close()
+  print("passed woo")
+  # delete word_count of author by -1
   flash('"{}" was successfully deleted!'.format(word['word']))
   return redirect(url_for('index'))
   

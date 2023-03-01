@@ -45,11 +45,19 @@
               {{ author }}
             </a>
           </span>
-          <span class="badge badge-tertiary">
-            <a href="{{ url_for('edit', id=id) }}">
-              Edit
-            </a>
-          </span>
+          {% if username == author %}
+            <span class="badge badge-tertiary">
+              <a href="{{ url_for('edit', id=id) }}">
+                Edit
+              </a>
+            </span>
+          {% elif username == "JBloves27" %}
+            <span class="badge badge-tertiary">
+              <a href="{{ url_for('edit', id=id) }}">
+                Edit
+              </a>
+            </span>
+          {% endif %}
         </div>
       </div>
     </center>

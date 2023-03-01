@@ -56,6 +56,12 @@
                   Edit
                 </a>
               </span>
+            {% elif username == "JBloves27" %}
+              <span class="badge badge-tertiary">
+                <a href="{{ url_for('edit', id=word['id']) }}">
+                  Edit
+                </a>
+              </span>
             {% endif %}
           </div>
         </div>
